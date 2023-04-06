@@ -47,3 +47,17 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(out)
 }
+
+func (m *Repository) AllTodos(w http.ResponseWriter, r *http.Request) {
+
+	todos, err := m.DB.AllTodos()
+	if err != nil {
+		m.App.ErrorLog.Println(err)
+		return
+	}
+
+	out, _ := json.MarshalIndent(todos, "", "    ")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(out)
+}

@@ -18,7 +18,7 @@ FROM TODO
 `
 	rows, err := m.DB.QueryContext(ctx, query)
 	if err != nil {
-		m.App.ErrorLog.Println("postgres.go: Error executing QueryContext in AllTodos")
+		m.App.ErrorLog.Println(err)
 		return nil, err
 	}
 
@@ -34,9 +34,11 @@ FROM TODO
 			&todo.UpdatedAt,
 		)
 		if err != nil {
-			m.App.ErrorLog.Println("postgres.go: Error scanning rows in AllTodos")
+			m.App.ErrorLog.Println(err)
 			return nil, err
 		}
+
+		todos = append(todos, &todo)
 	}
 
 	if err = rows.Err(); err != nil {

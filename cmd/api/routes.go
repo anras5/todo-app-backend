@@ -16,6 +16,7 @@ func routes(app *config.Application) http.Handler {
 	mux.Use(middleware.Recoverer)
 
 	mux.Get("/", handlers.Repo.Home)
+	mux.Get("/todos", handlers.Repo.AllTodos)
 
 	return mux
 }
