@@ -19,18 +19,21 @@ var errorLog *log.Logger
 
 func main() {
 
+	// -------------------------------------------------------------------------------------------- //
 	// Load variables from .env file
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Set up loggers
+	// -------------------------------------------------------------------------------------------- //
+	//Set up loggers
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = infoLog
 	errorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	app.ErrorLog = errorLog
 
+	// -------------------------------------------------------------------------------------------- //
 	// Connect to database
 	log.Println("Connecting to database")
 	db, err := driver.ConnectSQL(fmt.Sprintf("host=localhost port=5432 dbname=todos user=%s password=%s sslmode=%s",
@@ -42,6 +45,8 @@ func main() {
 	}
 	defer db.Close()
 
+	// -------------------------------------------------------------------------------------------- //
+	// set repo and handlers
 	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)
 

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"encoding/json"
 	"github.com/anras5/todo-app-backend/internal/config"
 	"github.com/anras5/todo-app-backend/internal/repository"
 	"github.com/anras5/todo-app-backend/internal/repository/dbrepo"
@@ -42,10 +41,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 		Version: "1.0.0",
 	}
 
-	out, _ := json.Marshal(payload)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(out)
+	_ = m.App.WriteJSON(w, http.StatusOK, payload)
 }
 
 func (m *Repository) AllTodos(w http.ResponseWriter, r *http.Request) {
@@ -53,11 +49,9 @@ func (m *Repository) AllTodos(w http.ResponseWriter, r *http.Request) {
 	todos, err := m.DB.AllTodos()
 	if err != nil {
 		m.App.ErrorLog.Println(err)
+		_ = m.App.ErrorJSON(w, err)
 		return
 	}
 
-	out, _ := json.MarshalIndent(todos, "", "    ")
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(out)
+	_ = m.App.WriteJSON(w, http.StatusOK, todos)
 }
