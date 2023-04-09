@@ -17,6 +17,7 @@ func routes(app *config.Application) http.Handler {
 
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/todos", handlers.Repo.AllTodos)
+	mux.Get("/todos/{id}", handlers.Repo.OneTodo)
 
 	return mux
 }

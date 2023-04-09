@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (m *postgresDBRepo) AllTodos() ([]*models.Todo, error) {
+func (m *postgresDBRepo) SelectTodos() ([]*models.Todo, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -45,4 +45,33 @@ FROM TODO
 		return nil, err
 	}
 	return todos, nil
+}
+
+func (m *postgresDBRepo) SelectTodo(id int) (*models.Todo, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var todo models.Todo
+
+	query := `
+select id, name, description, deadline, completed, created_at, updated_at
+from todo
+where id = $1
+`
+
+	row := m.DB.QueryRowContext(ctx, query, id)
+	err := row.Scan(
+		&todo.ID,
+		&todo.Name,
+		&todo.Description,
+		&todo.Deadline,
+		&todo.Completed,
+		&todo.CreatedAt,
+		&todo.UpdatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &todo, nil
 }
