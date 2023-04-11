@@ -121,6 +121,20 @@ where id = $6
 	return nil
 }
 
+func (m *postgresDBRepo) UpdateTodoCompleted(id int, completed bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `
+update todo set completed = $1, updated_at = $2 where id = $3
+`
+	_, err := m.DB.ExecContext(ctx, stmt, completed, time.Now(), id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (m *postgresDBRepo) DeleteTodo(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

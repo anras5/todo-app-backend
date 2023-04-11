@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	"github.com/anras5/todo-app-backend/internal/config"
 	"github.com/anras5/todo-app-backend/internal/models"
 	"github.com/anras5/todo-app-backend/internal/repository"
@@ -120,6 +122,40 @@ func (m *Repository) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	response := config.JSONResponse{
 		Error:   false,
 		Message: "todo updated",
+	}
+	m.App.WriteJSON(w, http.StatusAccepted, response)
+}
+
+func (m *Repository) UpdateTodoCompleted(w http.ResponseWriter, r *http.Request) {
+	todoID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		_ = m.App.ErrorJSON(w, err)
+		return
+	}
+	isCompleted := chi.URLParam(r, "complete")
+
+	switch isCompleted {
+	case "complete":
+		err = m.DB.UpdateTodoCompleted(todoID, true)
+		if err != nil {
+			_ = m.App.ErrorJSON(w, err)
+			return
+		}
+	case "incomplete":
+		err = m.DB.UpdateTodoCompleted(todoID, false)
+		if err != nil {
+			_ = m.App.ErrorJSON(w, err)
+			return
+		}
+	default:
+		err = errors.New("should provide 'complete' or 'incomplete'")
+		_ = m.App.ErrorJSON(w, err)
+		return
+	}
+
+	response := config.JSONResponse{
+		Error:   false,
+		Message: fmt.Sprintf("todo updated to %s", isCompleted),
 	}
 	m.App.WriteJSON(w, http.StatusAccepted, response)
 }
