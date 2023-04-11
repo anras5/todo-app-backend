@@ -101,3 +101,25 @@ func (m *Repository) InsertTodo(w http.ResponseWriter, r *http.Request) {
 	m.App.WriteJSON(w, http.StatusAccepted, response)
 
 }
+
+func (m *Repository) UpdateTodo(w http.ResponseWriter, r *http.Request) {
+	var todo models.Todo
+
+	err := m.App.ReadJSON(w, r, &todo)
+	if err != nil {
+		_ = m.App.ErrorJSON(w, err)
+		return
+	}
+
+	err = m.DB.UpdateTodo(todo)
+	if err != nil {
+		_ = m.App.ErrorJSON(w, err)
+		return
+	}
+
+	response := config.JSONResponse{
+		Error:   false,
+		Message: "todo updated",
+	}
+	m.App.WriteJSON(w, http.StatusAccepted, response)
+}

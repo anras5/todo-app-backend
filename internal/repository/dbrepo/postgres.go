@@ -98,3 +98,25 @@ values ($1, $2, $3, $4, $5, $6) returning id
 	}
 	return newID, nil
 }
+
+func (m *postgresDBRepo) UpdateTodo(todo models.Todo) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `
+update todo set name = $1, description = $2, deadline = $3, completed = $4, updated_at = $5
+where id = $6
+`
+	_, err := m.DB.ExecContext(ctx, stmt,
+		todo.Name,
+		todo.Description,
+		todo.Deadline,
+		todo.Completed,
+		time.Now(),
+		todo.ID,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
