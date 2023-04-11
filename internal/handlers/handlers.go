@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"github.com/anras5/todo-app-backend/internal/config"
+	"github.com/anras5/todo-app-backend/internal/models"
 	"github.com/anras5/todo-app-backend/internal/repository"
 	"github.com/anras5/todo-app-backend/internal/repository/dbrepo"
 	"github.com/go-chi/chi/v5"
@@ -74,4 +75,29 @@ func (m *Repository) OneTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	_ = m.App.WriteJSON(w, http.StatusOK, todo)
+}
+
+func (m *Repository) InsertTodo(w http.ResponseWriter, r *http.Request) {
+	var todo models.Todo
+
+	err := m.App.ReadJSON(w, r, &todo)
+	if err != nil {
+		m.App.ErrorLog.Println(err)
+		_ = m.App.ErrorJSON(w, err)
+		return
+	}
+
+	_, err = m.DB.InsertTodo(todo)
+	if err != nil {
+		m.App.ErrorLog.Println(err)
+		_ = m.App.ErrorJSON(w, err)
+		return
+	}
+
+	response := config.JSONResponse{
+		Error:   false,
+		Message: "todo inserted",
+	}
+	m.App.WriteJSON(w, http.StatusAccepted, response)
+
 }

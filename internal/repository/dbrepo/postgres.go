@@ -75,3 +75,26 @@ where id = $1
 
 	return &todo, nil
 }
+
+func (m *postgresDBRepo) InsertTodo(todo models.Todo) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `
+insert into todo (name, description, deadline, completed, created_at, updated_at)
+values ($1, $2, $3, $4, $5, $6) returning id
+`
+	var newID int
+	err := m.DB.QueryRowContext(ctx, stmt,
+		todo.Name,
+		todo.Description,
+		todo.Deadline,
+		todo.Completed,
+		todo.CreatedAt,
+		todo.UpdatedAt,
+	).Scan(&newID)
+	if err != nil {
+		return newID, err
+	}
+	return newID, nil
+}
