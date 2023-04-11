@@ -123,3 +123,25 @@ func (m *Repository) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	}
 	m.App.WriteJSON(w, http.StatusAccepted, response)
 }
+
+func (m *Repository) DeleteTodo(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	todoID, err := strconv.Atoi(id)
+	if err != nil {
+		_ = m.App.ErrorJSON(w, err)
+		return
+	}
+
+	err = m.DB.DeleteTodo(todoID)
+	if err != nil {
+		_ = m.App.ErrorJSON(w, err)
+		return
+	}
+
+	response := config.JSONResponse{
+		Error:   false,
+		Message: "todo deleted",
+	}
+	m.App.WriteJSON(w, http.StatusAccepted, response)
+
+}

@@ -7,4 +7,5 @@ type DatabaseRepo interface {
 	SelectTodo(id int) (*models.Todo, error)
 	InsertTodo(todo models.Todo) (int, error)
 	UpdateTodo(todo models.Todo) error
+	DeleteTodo(id int) error
 }
