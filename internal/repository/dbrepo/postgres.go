@@ -90,8 +90,8 @@ values ($1, $2, $3, $4, $5, $6) returning id
 		todo.Description,
 		todo.Deadline,
 		todo.Completed,
-		todo.CreatedAt,
-		todo.UpdatedAt,
+		time.Now(),
+		time.Now(),
 	).Scan(&newID)
 	if err != nil {
 		return newID, err
