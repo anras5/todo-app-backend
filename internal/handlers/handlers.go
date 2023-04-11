@@ -51,7 +51,24 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 
 func (m *Repository) AllTodos(w http.ResponseWriter, r *http.Request) {
 
-	todos, err := m.DB.SelectTodos()
+	var todos []*models.Todo
+	var err error
+	var searchCompleted bool
+
+	completed := r.URL.Query().Get("completed")
+	if completed != "" {
+		// we get a completed query params
+		searchCompleted, err = strconv.ParseBool(completed)
+		if err != nil {
+			_ = m.App.ErrorJSON(w, errors.New("completed should be true or false"))
+			return
+		}
+		todos, err = m.DB.SelectTodos(searchCompleted)
+	} else {
+		// we do not get any query params
+		todos, err = m.DB.SelectTodos()
+	}
+
 	if err != nil {
 		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)

@@ -2,21 +2,35 @@ package dbrepo
 
 import (
 	"context"
+	"database/sql"
 	"github.com/anras5/todo-app-backend/internal/models"
 	"time"
 )
 
-func (m *postgresDBRepo) SelectTodos() ([]*models.Todo, error) {
+func (m *postgresDBRepo) SelectTodos(completed ...bool) ([]*models.Todo, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	var todos []*models.Todo
+	var query string
+	var rows *sql.Rows
+	var err error
 
-	query := `
+	if len(completed) > 0 {
+		// we want to filter the data
+		query = `
+SELECT ID, NAME, DESCRIPTION, DEADLINE, COMPLETED, CREATED_AT, UPDATED_AT
+FROM TODO WHERE COMPLETED = $1
+`
+		rows, err = m.DB.QueryContext(ctx, query, completed[0])
+	} else {
+		// we want to get all the data
+		query = `
 SELECT ID, NAME, DESCRIPTION, DEADLINE, COMPLETED, CREATED_AT, UPDATED_AT
 FROM TODO
 `
-	rows, err := m.DB.QueryContext(ctx, query)
+		rows, err = m.DB.QueryContext(ctx, query)
+	}
 	if err != nil {
 		m.App.ErrorLog.Println(err)
 		return nil, err
