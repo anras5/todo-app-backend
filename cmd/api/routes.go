@@ -17,6 +17,11 @@ func routes(app *config.Application) http.Handler {
 
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/todos", handlers.Repo.AllTodos)
+	mux.Post("/todos", handlers.Repo.InsertTodo)
+	mux.Get("/todos/{id}", handlers.Repo.OneTodo)
+	mux.Put("/todos/{id}", handlers.Repo.UpdateTodo)
+	mux.Put("/todos/{id}/{complete}", handlers.Repo.UpdateTodoCompleted)
+	mux.Delete("/todos/{id}", handlers.Repo.DeleteTodo)
 
 	return mux
 }
