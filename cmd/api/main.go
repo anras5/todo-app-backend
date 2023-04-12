@@ -35,7 +35,7 @@ func main() {
 
 	// -------------------------------------------------------------------------------------------- //
 	// Connect to database
-	app.InfoLog.Println("Connecting to database")
+	app.InfoLog.Println("Connecting to database on port 5432")
 	db, err := driver.ConnectSQL(fmt.Sprintf("host=postgres-db port=5432 dbname=todos user=%s password=%s sslmode=%s",
 		os.Getenv("DB_USER"), os.Getenv("DB_PASSWD"), os.Getenv("SSL_MODE")))
 	if err != nil {

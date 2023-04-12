@@ -7,7 +7,7 @@ COPY go.mod go.sum ./
 COPY . .
 
 RUN go mod download
-RUN go build -o /api ./cmd/api
+RUN go get github.com/githubnemo/CompileDaemon
+RUN go install github.com/githubnemo/CompileDaemon
 
-EXPOSE 8080
-CMD ["/api"]
+ENTRYPOINT CompileDaemon -polling -log-prefix=false -build="go build -o api ./cmd/api" -command="./api" -directory="./"
