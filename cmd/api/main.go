@@ -27,7 +27,7 @@ func main() {
 	}
 
 	// -------------------------------------------------------------------------------------------- //
-	//Set up loggers
+	// Set up loggers
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = infoLog
 	errorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
@@ -35,8 +35,8 @@ func main() {
 
 	// -------------------------------------------------------------------------------------------- //
 	// Connect to database
-	log.Println("Connecting to database")
-	db, err := driver.ConnectSQL(fmt.Sprintf("host=localhost port=5432 dbname=todos user=%s password=%s sslmode=%s",
+	app.InfoLog.Println("Connecting to database on port 5432")
+	db, err := driver.ConnectSQL(fmt.Sprintf("host=postgres-db port=5432 dbname=todos user=%s password=%s sslmode=%s",
 		os.Getenv("DB_USER"), os.Getenv("DB_PASSWD"), os.Getenv("SSL_MODE")))
 	if err != nil {
 		log.Fatal("Cannot connect to database! Dying...")

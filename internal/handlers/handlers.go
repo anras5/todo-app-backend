@@ -43,7 +43,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	}{
 		Status:  "active",
 		Message: "Go Todos API is up and running",
-		Version: "1.0.0",
+		Version: "1.0.1",
 	}
 
 	_ = m.App.WriteJSON(w, http.StatusOK, payload)
