@@ -23,7 +23,7 @@ services:
       - DB_PASSWD=postgres
     build: .
     ports:
-      - '8081:8080'
+      - '8080:8080'
     restart: on-failure
     volumes:
       - .:/app
