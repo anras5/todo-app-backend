@@ -30,6 +30,13 @@ func NewRepo(a *config.Application, db *sql.DB) *Repository {
 	}
 }
 
+func NewTestRepo(a *config.Application) *Repository {
+	return &Repository{
+		App: a,
+		DB:  dbrepo.NewTestingRepo(a),
+	}
+}
+
 // NewHandlers sets the repository for the handlers
 func NewHandlers(r *Repository) {
 	Repo = r
