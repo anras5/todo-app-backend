@@ -6,7 +6,7 @@ docker compose up --build
 ```
 
 ## Description
-Simple REST backend application written Go.
+Simple REST backend application written Go. Listens on port `8080` \
 Available endpoints:
 - `GET /todos`
 - `GET /todos/:id`
