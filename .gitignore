@@ -1,5 +1,4 @@
 .idea/
 database.yml
-.env
 postgres-data/
-api
+apibin
