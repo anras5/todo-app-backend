@@ -5,7 +5,6 @@ import (
 	"github.com/anras5/todo-app-backend/internal/config"
 	"github.com/anras5/todo-app-backend/internal/driver"
 	"github.com/anras5/todo-app-backend/internal/handlers"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
@@ -18,13 +17,6 @@ var infoLog *log.Logger
 var errorLog *log.Logger
 
 func main() {
-
-	// -------------------------------------------------------------------------------------------- //
-	// Load variables from .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	// -------------------------------------------------------------------------------------------- //
 	// Set up loggers
