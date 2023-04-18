@@ -3,6 +3,7 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/anras5/todo-app-backend/internal/models"
 	"net/http"
 	"net/http/httptest"
@@ -103,7 +104,71 @@ func TestRepository_InsertTodo(t *testing.T) {
 		if rr.Code != e.expectedStatusCode {
 			t.Errorf("%s returned wrong response code: got %d, wanted %d", e.name, rr.Code, e.expectedStatusCode)
 		}
-
 	}
+}
 
+var theUpdateTests = []struct {
+	name               string
+	todo               interface{}
+	id                 int
+	method             string
+	expectedStatusCode int
+}{
+	{
+		name: "valid update",
+		todo: models.Todo{
+			ID:          1,
+			Name:        "",
+			Description: "",
+			Deadline:    time.Time{},
+			Completed:   false,
+			CreatedAt:   time.Time{},
+			UpdatedAt:   time.Time{},
+		},
+		id:                 1,
+		method:             "PUT",
+		expectedStatusCode: http.StatusAccepted,
+	},
+	{
+		name: "invalid update",
+		todo: struct {
+			TestField string
+		}{
+			TestField: "onetwothree",
+		},
+		id:                 1,
+		method:             "PUT",
+		expectedStatusCode: http.StatusBadRequest,
+	},
+	{
+		name: "wrong id update",
+		todo: models.Todo{
+			ID:          2,
+			Name:        "",
+			Description: "",
+			Deadline:    time.Time{},
+			Completed:   false,
+			CreatedAt:   time.Time{},
+			UpdatedAt:   time.Time{},
+		},
+		id:                 2,
+		method:             "PUT",
+		expectedStatusCode: http.StatusBadRequest,
+	},
+}
+
+func TestRepository_UpdateTodo(t *testing.T) {
+	for _, e := range theUpdateTests {
+		var req *http.Request
+		jsonTestTodo, _ := json.Marshal(e.todo)
+		req, _ = http.NewRequest(e.method, fmt.Sprintf("/todos/%d", e.id), bytes.NewBuffer(jsonTestTodo))
+
+		rr := httptest.NewRecorder()
+		handler := http.HandlerFunc(Repo.UpdateTodo)
+		handler.ServeHTTP(rr, req)
+
+		if rr.Code != e.expectedStatusCode {
+			t.Errorf("%s returned wrong response code: got %d, wanted %d", e.name, rr.Code, e.expectedStatusCode)
+		}
+	}
 }

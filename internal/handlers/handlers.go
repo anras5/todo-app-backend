@@ -77,7 +77,6 @@ func (m *Repository) AllTodos(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}

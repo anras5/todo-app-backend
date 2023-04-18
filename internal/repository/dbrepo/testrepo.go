@@ -30,6 +30,9 @@ func (m *testDBRepo) InsertTodo(todo models.Todo) (int, error) {
 }
 
 func (m *testDBRepo) UpdateTodo(todo models.Todo) error {
+	if todo.ID == 2 {
+		return errors.New("error")
+	}
 	return nil
 }
 
