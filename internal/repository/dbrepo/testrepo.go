@@ -1,6 +1,7 @@
 package dbrepo
 
 import (
+	"errors"
 	"github.com/anras5/todo-app-backend/internal/models"
 )
 
@@ -13,6 +14,10 @@ func (m *testDBRepo) SelectTodo(id int) (*models.Todo, error) {
 }
 
 func (m *testDBRepo) InsertTodo(todo models.Todo) (int, error) {
+	// if the todos name is empty - fail
+	if todo.Name == "" {
+		return 2, errors.New("error")
+	}
 	return 1, nil
 }
 

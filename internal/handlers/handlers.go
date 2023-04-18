@@ -106,14 +106,12 @@ func (m *Repository) InsertTodo(w http.ResponseWriter, r *http.Request) {
 
 	err := m.App.ReadJSON(w, r, &todo)
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}
 
 	_, err = m.DB.InsertTodo(todo)
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}
