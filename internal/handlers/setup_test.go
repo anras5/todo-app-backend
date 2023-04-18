@@ -2,7 +2,10 @@ package handlers
 
 import (
 	"github.com/anras5/todo-app-backend/internal/config"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"log"
+	"net/http"
 	"os"
 	"testing"
 )
@@ -24,4 +27,22 @@ func TestMain(m *testing.M) {
 	NewHandlers(repo)
 
 	os.Exit(m.Run())
+}
+
+func getRoutes() http.Handler {
+	mux := chi.NewRouter()
+
+	mux.Use(middleware.RequestID)
+	mux.Use(middleware.Logger)
+	mux.Use(middleware.Recoverer)
+
+	mux.Get("/", Repo.Home)
+	mux.Get("/todos", Repo.AllTodos)
+	mux.Post("/todos", Repo.InsertTodo)
+	mux.Get("/todos/{id}", Repo.OneTodo)
+	mux.Put("/todos/{id}", Repo.UpdateTodo)
+	mux.Put("/todos/{id}/{complete}", Repo.UpdateTodoCompleted)
+	mux.Delete("/todos/{id}", Repo.DeleteTodo)
+
+	return mux
 }

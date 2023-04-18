@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-var theTests = []struct {
+var theGetTests = []struct {
 	name               string
 	url                string
 	method             string
@@ -17,18 +17,26 @@ var theTests = []struct {
 	{"all-todos-completed", "/todos?completed=true", "GET", http.StatusOK},
 	{"all-todos-incompleted", "/todos?completed=false", "GET", http.StatusOK},
 	{"all-todos-completed-wrong", "/todos?completed=one", "GET", http.StatusBadRequest},
+	{"one-todo", "/todos/1", "GET", http.StatusOK},
+	{"one-todo-invalid-parameter", "/todos/one", "GET", http.StatusBadRequest},
 }
 
-func TestRepository_Home(t *testing.T) {
+// TestHandlers tests all routes that don't require extra tests (GET handlers)
+func TestHandlers(t *testing.T) {
 
-	req, _ := http.NewRequest("GET", "/", nil)
+	routes := getRoutes()
+	ts := httptest.NewTLSServer(routes)
+	defer ts.Close()
 
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(Repo.Home)
-	handler.ServeHTTP(rr, req)
+	for _, e := range theGetTests {
+		response, err := ts.Client().Get(ts.URL + e.url)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	if rr.Code != http.StatusOK {
-		t.Errorf("Expected %d but got %d", http.StatusOK, rr.Code)
+		if response.StatusCode != e.expectedStatusCode {
+			t.Errorf("for %s, expected %d but got %d", e.name, e.expectedStatusCode, response.StatusCode)
+		}
 	}
 
 }

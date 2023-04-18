@@ -89,14 +89,12 @@ func (m *Repository) OneTodo(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	todoID, err := strconv.Atoi(id)
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}
 
 	todo, err := m.DB.SelectTodo(todoID)
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}
