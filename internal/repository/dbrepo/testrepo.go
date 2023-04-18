@@ -44,5 +44,8 @@ func (m *testDBRepo) UpdateTodoCompleted(id int, completed bool) error {
 }
 
 func (m *testDBRepo) DeleteTodo(id int) error {
+	if id == 2 {
+		return errors.New("error")
+	}
 	return nil
 }

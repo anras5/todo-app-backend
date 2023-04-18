@@ -236,6 +236,50 @@ func TestRepository_UpdateTodoCompleted(t *testing.T) {
 	}
 }
 
+var theDeleteTests = []struct {
+	name               string
+	id                 string
+	expectedStatusCode int
+}{
+	{
+		name:               "valid-delete",
+		id:                 "1",
+		expectedStatusCode: http.StatusAccepted,
+	},
+	{
+		name:               "invalid-id-parameter-delete",
+		id:                 "one",
+		expectedStatusCode: http.StatusBadRequest,
+	},
+	{
+		name:               "db-error-delete",
+		id:                 "2",
+		expectedStatusCode: http.StatusBadRequest,
+	},
+}
+
+func TestRepository_DeleteTodo(t *testing.T) {
+	for _, e := range theDeleteTests {
+
+		req, _ := http.NewRequest("DELETE", fmt.Sprintf("/todos/%s", e.id), nil)
+
+		// handle context and path variables in chi router
+		ctx := req.Context()
+		pathVariables := make(map[string]string)
+		pathVariables["id"] = e.id
+		ctx = addChiContext(ctx, pathVariables)
+		req = req.WithContext(ctx)
+
+		rr := httptest.NewRecorder()
+		handler := http.HandlerFunc(Repo.DeleteTodo)
+		handler.ServeHTTP(rr, req)
+
+		if rr.Code != e.expectedStatusCode {
+			t.Errorf("%s returned wrong response code: got %d, wanted %d", e.name, rr.Code, e.expectedStatusCode)
+		}
+	}
+}
+
 func addChiContext(parentCtx context.Context, pathVariables map[string]string) context.Context {
 	chiCtx := chi.NewRouteContext()
 	for k, v := range pathVariables {
