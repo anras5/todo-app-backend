@@ -30,6 +30,13 @@ func NewRepo(a *config.Application, db *sql.DB) *Repository {
 	}
 }
 
+func NewTestRepo(a *config.Application) *Repository {
+	return &Repository{
+		App: a,
+		DB:  dbrepo.NewTestingRepo(a),
+	}
+}
+
 // NewHandlers sets the repository for the handlers
 func NewHandlers(r *Repository) {
 	Repo = r
@@ -70,7 +77,6 @@ func (m *Repository) AllTodos(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}
@@ -82,14 +88,12 @@ func (m *Repository) OneTodo(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	todoID, err := strconv.Atoi(id)
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}
 
 	todo, err := m.DB.SelectTodo(todoID)
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}
@@ -101,14 +105,12 @@ func (m *Repository) InsertTodo(w http.ResponseWriter, r *http.Request) {
 
 	err := m.App.ReadJSON(w, r, &todo)
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}
 
 	_, err = m.DB.InsertTodo(todo)
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		_ = m.App.ErrorJSON(w, err)
 		return
 	}
