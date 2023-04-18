@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/anras5/todo-app-backend/internal/models"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -171,4 +173,73 @@ func TestRepository_UpdateTodo(t *testing.T) {
 			t.Errorf("%s returned wrong response code: got %d, wanted %d", e.name, rr.Code, e.expectedStatusCode)
 		}
 	}
+}
+
+var theUpdateCompletedTests = []struct {
+	name               string
+	id                 string
+	completed          string
+	expectedStatusCode int
+}{
+	{
+		name:               "valid-update-completed",
+		id:                 "1",
+		completed:          "complete",
+		expectedStatusCode: http.StatusAccepted,
+	},
+	{
+		name:               "invalid-id-update-completed",
+		id:                 "one",
+		completed:          "complete",
+		expectedStatusCode: http.StatusBadRequest,
+	},
+	{
+		name:               "invalid-complete-variable-update-completed",
+		id:                 "1",
+		completed:          "some string",
+		expectedStatusCode: http.StatusBadRequest,
+	},
+	{
+		name:               "db-error-complete-update-completed",
+		id:                 "2",
+		completed:          "complete",
+		expectedStatusCode: http.StatusBadRequest,
+	},
+	{
+		name:               "db-error-incomplete-update-completed",
+		id:                 "2",
+		completed:          "incomplete",
+		expectedStatusCode: http.StatusBadRequest,
+	},
+}
+
+func TestRepository_UpdateTodoCompleted(t *testing.T) {
+	for _, e := range theUpdateCompletedTests {
+
+		req, _ := http.NewRequest("PUT", fmt.Sprintf("/todos/%s/%s", e.id, e.completed), nil)
+
+		// handle context and path variables in chi router
+		ctx := req.Context()
+		pathVariables := make(map[string]string)
+		pathVariables["id"] = e.id
+		pathVariables["complete"] = e.completed
+		ctx = addChiContext(ctx, pathVariables)
+		req = req.WithContext(ctx)
+
+		rr := httptest.NewRecorder()
+		handler := http.HandlerFunc(Repo.UpdateTodoCompleted)
+		handler.ServeHTTP(rr, req)
+
+		if rr.Code != e.expectedStatusCode {
+			t.Errorf("%s returned wrong response code: got %d, wanted %d", e.name, rr.Code, e.expectedStatusCode)
+		}
+	}
+}
+
+func addChiContext(parentCtx context.Context, pathVariables map[string]string) context.Context {
+	chiCtx := chi.NewRouteContext()
+	for k, v := range pathVariables {
+		chiCtx.URLParams.Add(k, v)
+	}
+	return context.WithValue(parentCtx, chi.RouteCtxKey, chiCtx)
 }

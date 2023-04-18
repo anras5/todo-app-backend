@@ -37,6 +37,9 @@ func (m *testDBRepo) UpdateTodo(todo models.Todo) error {
 }
 
 func (m *testDBRepo) UpdateTodoCompleted(id int, completed bool) error {
+	if id == 2 {
+		return errors.New("error")
+	}
 	return nil
 }
 
