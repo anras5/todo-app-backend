@@ -6,10 +6,18 @@ import (
 )
 
 func (m *testDBRepo) SelectTodos(completed ...bool) ([]*models.Todo, error) {
+	// if completed is false, then fail
+	if len(completed) > 0 && !completed[0] {
+		return nil, errors.New("error")
+	}
 	return nil, nil
 }
 
 func (m *testDBRepo) SelectTodo(id int) (*models.Todo, error) {
+	// if id is 2, then fail
+	if id == 2 {
+		return nil, errors.New("error")
+	}
 	return nil, nil
 }
 

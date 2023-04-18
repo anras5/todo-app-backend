@@ -19,9 +19,10 @@ var theGetTests = []struct {
 	{"home", "/", "GET", http.StatusOK},
 	{"all-todos", "/todos", "GET", http.StatusOK},
 	{"all-todos-completed", "/todos?completed=true", "GET", http.StatusOK},
-	{"all-todos-incompleted", "/todos?completed=false", "GET", http.StatusOK},
+	{"all-todos-incompleted", "/todos?completed=false", "GET", http.StatusBadRequest},
 	{"all-todos-completed-wrong", "/todos?completed=one", "GET", http.StatusBadRequest},
-	{"one-todo", "/todos/1", "GET", http.StatusOK},
+	{"one-todo-1", "/todos/1", "GET", http.StatusOK},
+	{"one-todo-2", "/todos/2", "GET", http.StatusBadRequest},
 	{"one-todo-invalid-parameter", "/todos/one", "GET", http.StatusBadRequest},
 }
 
