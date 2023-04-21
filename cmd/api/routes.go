@@ -14,6 +14,7 @@ func routes(app *config.Application) http.Handler {
 	mux.Use(middleware.RequestID)
 	mux.Use(middleware.Logger)
 	mux.Use(middleware.Recoverer)
+	mux.Use(EnableCORS)
 
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/todos", handlers.Repo.AllTodos)
