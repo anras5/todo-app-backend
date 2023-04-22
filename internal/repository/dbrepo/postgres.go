@@ -20,14 +20,14 @@ func (m *postgresDBRepo) SelectTodos(completed ...bool) ([]*models.Todo, error) 
 		// we want to filter the data
 		query = `
 SELECT ID, NAME, DESCRIPTION, DEADLINE, COMPLETED, CREATED_AT, UPDATED_AT
-FROM TODO WHERE COMPLETED = $1
+FROM TODO WHERE COMPLETED = $1 ORDER BY DEADLINE
 `
 		rows, err = m.DB.QueryContext(ctx, query, completed[0])
 	} else {
 		// we want to get all the data
 		query = `
 SELECT ID, NAME, DESCRIPTION, DEADLINE, COMPLETED, CREATED_AT, UPDATED_AT
-FROM TODO
+FROM TODO ORDER BY DEADLINE
 `
 		rows, err = m.DB.QueryContext(ctx, query)
 	}
