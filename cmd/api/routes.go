@@ -24,5 +24,8 @@ func routes() http.Handler {
 	mux.Put("/todos/{id}/{complete}", handlers.Repo.UpdateTodoCompleted)
 	mux.Delete("/todos/{id}", handlers.Repo.DeleteTodo)
 
+	// GRAPHQL
+	mux.Post("/graphql", handlers.Repo.GraphQL)
+
 	return mux
 }

@@ -2,15 +2,17 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
+	"strconv"
+
 	"github.com/anras5/todo-app-backend/internal/config"
 	"github.com/anras5/todo-app-backend/internal/models"
 	"github.com/anras5/todo-app-backend/internal/repository"
 	"github.com/anras5/todo-app-backend/internal/repository/dbrepo"
 	"github.com/go-chi/chi/v5"
-	"net/http"
-	"strconv"
 )
 
 // Repo the repository used by the handlers
@@ -199,4 +201,25 @@ func (m *Repository) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	}
 	m.App.WriteJSON(w, http.StatusAccepted, response)
 
+}
+
+func (m *Repository) GraphQL(w http.ResponseWriter, r *http.Request) {
+	var req config.GraphQLRequest
+	// parse request into GraphQLRequest
+	err := m.App.ReadJSON(w, r, &req)
+
+	g := NewGraph()
+	g.QueryString = req.Query
+	g.Variables = req.Variables
+
+	resp, err := g.Query()
+	if err != nil {
+		_ = m.App.ErrorJSON(w, err)
+		return
+	}
+
+	j, _ := json.MarshalIndent(resp, "", "\t")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(j)
 }

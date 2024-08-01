@@ -7,6 +7,12 @@ import (
 	"net/http"
 )
 
+type GraphQLRequest struct {
+	Query         string                 `json:"query"`
+	OperationName string                 `json:"operationName"`
+	Variables     map[string]interface{} `json:"variables"`
+}
+
 type JSONResponse struct {
 	Error   bool        `json:"error"`
 	Message string      `json:"message"`
