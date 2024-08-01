@@ -7,7 +7,7 @@ COPY go.mod go.sum ./
 COPY . .
 
 RUN go mod download
-RUN go get github.com/githubnemo/CompileDaemon
-RUN go install github.com/githubnemo/CompileDaemon
+RUN go install github.com/air-verse/air@latest
 
-ENTRYPOINT CompileDaemon -polling -log-prefix=false -build="go build -o apibin ./cmd/api" -command="./apibin" -directory="./"
+
+CMD air --build.cmd "go build -o apibin ./cmd/api" --build.bin "./apibin" --build.exclude_dir "postgres-data"

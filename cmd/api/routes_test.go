@@ -1,15 +1,14 @@
 package main
 
 import (
-	"github.com/anras5/todo-app-backend/internal/config"
-	"github.com/go-chi/chi/v5"
 	"testing"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func TestRoutes(t *testing.T) {
-	var app config.Application
 
-	mux := routes(&app)
+	mux := routes()
 
 	switch v := mux.(type) {
 	case *chi.Mux:

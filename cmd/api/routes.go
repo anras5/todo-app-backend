@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/anras5/todo-app-backend/internal/config"
+	"net/http"
+
 	"github.com/anras5/todo-app-backend/internal/handlers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"net/http"
 )
 
-func routes(app *config.Application) http.Handler {
+func routes() http.Handler {
 	mux := chi.NewRouter()
 
 	mux.Use(middleware.RequestID)
