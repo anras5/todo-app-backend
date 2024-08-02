@@ -2,8 +2,6 @@ module github.com/anras5/todo-app-backend
 
 go 1.21
 
-toolchain go1.22.5
-
 require (
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/jackc/pgx/v4 v4.18.1
