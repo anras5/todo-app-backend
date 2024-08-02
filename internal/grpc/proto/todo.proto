@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "./pb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+message Todo {
+    int32 id = 1;
+    string name = 2;
+    string description = 3;
+    google.protobuf.Timestamp deadline = 4;
+    bool completed = 5;
+}
+
+message Id {
+    int32 id = 1;
+}
+
+service TodoService {
+    rpc Create(Todo) returns (Todo) {}
+    rpc Get(Id) returns (Todo) {}
+    rpc Update(Todo) returns (Todo) {}
+    rpc Delete(Id) returns (Todo) {}
+    rpc List(google.protobuf.Empty) returns (stream Todo) {}
+}
