@@ -3,8 +3,9 @@ package dbrepo
 import (
 	"context"
 	"database/sql"
-	"github.com/anras5/todo-app-backend/internal/models"
 	"time"
+
+	"github.com/anras5/todo-app-backend/internal/models"
 )
 
 func (m *postgresDBRepo) SelectTodos(completed ...bool) ([]*models.Todo, error) {
@@ -32,7 +33,6 @@ FROM TODO ORDER BY DEADLINE
 		rows, err = m.DB.QueryContext(ctx, query)
 	}
 	if err != nil {
-		m.App.ErrorLog.Println(err)
 		return nil, err
 	}
 
@@ -48,7 +48,6 @@ FROM TODO ORDER BY DEADLINE
 			&todo.UpdatedAt,
 		)
 		if err != nil {
-			m.App.ErrorLog.Println(err)
 			return nil, err
 		}
 

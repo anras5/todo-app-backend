@@ -8,6 +8,7 @@ import (
 
 	"github.com/anras5/todo-app-backend/internal/config"
 	"github.com/anras5/todo-app-backend/internal/driver"
+	rpc "github.com/anras5/todo-app-backend/internal/grpc"
 	"github.com/anras5/todo-app-backend/internal/handlers"
 )
 
@@ -43,6 +44,11 @@ func main() {
 	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)
 
+	// -------------------------------------------------------------------------------------------- //
+	// Start gRPC server
+	grpcServer := rpc.NewTodoServer(db)
+	go grpcServer.Run()
+
 	srv := &http.Server{
 		Addr:    port,
 		Handler: routes(),
@@ -50,5 +56,4 @@ func main() {
 	app.InfoLog.Println("Listening on port 8080")
 	err = srv.ListenAndServe()
 	log.Fatal(err)
-
 }

@@ -6,8 +6,8 @@ docker compose up --build
 ```
 
 ## Description
-Simple REST backend application written Go. Listens on port `8080` \
-Available endpoints:
+Simple backend application written Go. Listens on port `8080` \
+Available  REST endpoints:
 - `GET /todos`
 - `GET /todos/:id`
 - `POST /todos`
@@ -18,3 +18,7 @@ Available endpoints:
 - `GET /todos?completed=true`
 - `GET /todos?completed=false`
 
+Available GraphQL endpoint:
+- `POST /graphql`
+
+Available gRPC service on port `9000`. The `proto` file is located in the `internal/grpc/proto` directory.

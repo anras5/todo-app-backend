@@ -28,14 +28,14 @@ type Repository struct {
 func NewRepo(a *config.Application, db *sql.DB) *Repository {
 	return &Repository{
 		App: a,
-		DB:  dbrepo.NewPostgresRepo(db, a),
+		DB:  dbrepo.NewPostgresRepo(db),
 	}
 }
 
 func NewTestRepo(a *config.Application) *Repository {
 	return &Repository{
 		App: a,
-		DB:  dbrepo.NewTestingRepo(a),
+		DB:  dbrepo.NewTestingRepo(),
 	}
 }
 
