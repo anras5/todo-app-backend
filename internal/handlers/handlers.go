@@ -111,7 +111,7 @@ func (m *Repository) InsertTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = m.DB.InsertTodo(todo)
+	id, err := m.DB.InsertTodo(todo)
 	if err != nil {
 		_ = m.App.ErrorJSON(w, err)
 		return
@@ -120,6 +120,7 @@ func (m *Repository) InsertTodo(w http.ResponseWriter, r *http.Request) {
 	response := config.JSONResponse{
 		Error:   false,
 		Message: "todo inserted",
+		Data:    id,
 	}
 	m.App.WriteJSON(w, http.StatusAccepted, response)
 
@@ -200,7 +201,6 @@ func (m *Repository) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 		Message: "todo deleted",
 	}
 	m.App.WriteJSON(w, http.StatusAccepted, response)
-
 }
 
 func (m *Repository) GraphQL(w http.ResponseWriter, r *http.Request) {
