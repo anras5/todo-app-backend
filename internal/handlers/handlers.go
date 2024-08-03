@@ -201,7 +201,6 @@ func (m *Repository) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 		Message: "todo deleted",
 	}
 	m.App.WriteJSON(w, http.StatusAccepted, response)
-
 }
 
 func (m *Repository) GraphQL(w http.ResponseWriter, r *http.Request) {

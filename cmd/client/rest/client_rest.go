@@ -15,7 +15,6 @@ import (
 const (
 	requestCount = 100000
 	apiURL       = "http://localhost:8080"
-	gRPCURL      = "localhost:9000"
 )
 
 func main() {

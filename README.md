@@ -33,3 +33,17 @@ UPDATE 30.546839209s.
 GET ALL 286.377333ms.
 DELETE 29.659430041s.
 ```
+
+- GRAPHQL:
+```
+createTodo 49.946371125s.
+getTodo 38.834429125s.
+updateTodo 56.15228325s.
+getTodos 900.687959ms.
+deleteTodo 50.838496459s.
+```
+
+- gRPC:
+```
+
+```
