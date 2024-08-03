@@ -25,25 +25,10 @@ Available gRPC service on port `9000`. The `proto` file is located in the `inter
 
 ## Response times of REST, GraphQL and gRPC
 
-- REST:
-```
-POST 31.70272325s.
-GET ONE 19.410775833s.
-UPDATE 30.546839209s.
-GET ALL 286.377333ms.
-DELETE 29.659430041s.
-```
-
-- GRAPHQL:
-```
-createTodo 49.946371125s.
-getTodo 38.834429125s.
-updateTodo 56.15228325s.
-getTodos 900.687959ms.
-deleteTodo 50.838496459s.
-```
-
-- gRPC:
-```
-
-```
+| Operation   | REST              | GraphQL           | gRPC              |
+|-------------|-------------------|-------------------|-------------------|
+| Create      | 31.70272325s  | 49.946371125s  | 27.479715708s  |
+| Get One     | 19.410775833s | 38.834429125s  | 19.171058792s  |
+| Update      | 30.546839209s | 56.15228325s   | 26.90399975s   |
+| Get All     | 286.377333ms  | 900.687959ms   | 206.215958ms   |
+| Delete      | 29.659430041s | 50.838496459s  | 30.074497541s  |
