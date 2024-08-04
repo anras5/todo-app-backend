@@ -23,7 +23,7 @@ Available GraphQL endpoint:
 
 Available gRPC service on port `9000`. The `proto` file is located in the `internal/grpc/proto` directory.
 
-## Response times of REST, GraphQL and gRPC
+## Response times of REST, GraphQL and gRPC for 100000 requests
 
 | Operation   | REST              | GraphQL           | gRPC              |
 |-------------|-------------------|-------------------|-------------------|
